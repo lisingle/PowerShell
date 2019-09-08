@@ -22,36 +22,36 @@ Function Check-Cdrom {
     if ($result) {
         write "如下虚拟机挂载了ISO镜像：“
         $result
+        if ($unmount -eq $true)
+        {
+            write "`n开始卸载ISO镜像..."
+            $vms | ForEach-Object {
+                $vm = $_
+                try
+                {
+                    Get-CDDrive -VM $vm | Set-CDDrive -NoMedia -Confirm:$false -ErrorAction "SilentlyContinue"
+                }
+                catch {}
+            }
+            Start-Sleep -Seconds 5
+            $question = Get-VMQuestion | Where {$_.Text -like "*locked*cd-rom*"}
+            if ($question) {
+                $question | ForEach-Object {
+                    $que = $_
+                    $options = $_.Options
+                    $Options | ForEach-Object {
+                        if ($_.Label -like "*yes*")
+                        {
+                            $option = $_.Label
+                            Set-VMQuestion -VMQuestion $que -Option $option -Confirm:$false -ErrorAction SilentlyContinue
+                        }
+                    }
+                }           
+            }
+            write "卸载已完成！"
+        }
     }
     else {
         write "没有找到挂载了ISO的虚拟机！"
-    }
-    if ($unmount -eq $true)
-    {
-        write "`n开始卸载ISO镜像..."
-        $vms | ForEach-Object {
-            $vm = $_
-            try
-            {
-                Get-CDDrive -VM $vm | Set-CDDrive -NoMedia -Confirm:$false -ErrorAction "SilentlyContinue"
-            }
-            catch {}
-        }
-        Start-Sleep -Seconds 5
-        $question = Get-VMQuestion | Where {$_.Text -like "*locked*cd-rom*"}
-        if ($question) {
-            $question | ForEach-Object {
-                $que = $_
-                $options = $_.Options
-                $Options | ForEach-Object {
-                    if ($_.Label -like "*yes*")
-                    {
-                        $option = $_.Label
-                        Set-VMQuestion -VMQuestion $que -Option $option -Confirm:$false -ErrorAction SilentlyContinue
-                    }
-                }
-            }            
-        }
-        write "卸载已完成！"
-    }
+    }    
 }
