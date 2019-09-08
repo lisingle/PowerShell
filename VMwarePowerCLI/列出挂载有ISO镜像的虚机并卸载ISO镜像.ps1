@@ -45,8 +45,8 @@ Function Check-Cdrom {
                         Set-VMQuestion -VMQuestion $que -Option $option -Confirm:$false -ErrorAction SilentlyContinue
                     }
                 }
-            }
-            write "卸载已完成！"
+            }            
         }
+        write "卸载已完成！"
     }
 }
