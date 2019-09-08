@@ -1,4 +1,4 @@
-﻿#This script created by LuckyJimmy
+#This script created by LuckyJimmy
 #Last update 2019/09/08
 #检查虚拟机的虚拟光驱ISO镜像挂载情况（输入参数-unmount $true或者1表示进行卸载）
 Function Check-Cdrom {
@@ -19,8 +19,13 @@ Function Check-Cdrom {
             $vms += $vm
         }
     }
-    write "如下虚拟机挂载了ISO镜像：“
-    $result
+    if ($result) {
+        write "如下虚拟机挂载了ISO镜像：“
+        $result
+    }
+    else {
+        write "没有找到挂载了ISO的虚拟机！"
+    }
     if ($unmount -eq $true)
     {
         write "`n开始卸载ISO镜像..."
