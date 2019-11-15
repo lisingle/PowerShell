@@ -29,6 +29,3 @@ Get-VM | Where-Object PowerState -EQ 'PoweredOn' | ForEach-Object {
     $result += $usage_result
 }
 $result | Export-Csv $area"虚拟机计算资源利用率统计"$timestamp".csv" -Encoding UTF8
-
-
-
